@@ -147,15 +147,15 @@ runMarkupT = runWriterT . fromMarkupT
 -- computation and the blaze markup rendered with a blaze renderer
 -- like 'Text.BlazeT.Renderer.Text.renderHtml'
 runWith :: Monad m => (MarkupI () -> c) -> MarkupT m a -> m (a, c)
-runWith renderer =  liftM (second $ renderer . wrapMarkup) . runMarkupT  
+runWith renderer =  fmap (second $ renderer . wrapMarkup) . runMarkupT  
 {-# INLINE runWith #-}
   
 execMarkupT :: Monad m => MarkupT m a -> m Text.Blaze.Markup
-execMarkupT = liftM snd . runMarkupT
+execMarkupT = fmap snd . runMarkupT
 {-# INLINE execMarkupT #-}
 
 execWith :: Monad m => (MarkupI () -> c) -> MarkupT m a -> m c
-execWith renderer = liftM snd . runWith renderer
+execWith renderer = fmap snd . runWith renderer
 {-# INLINE execWith #-}
 
 runMarkup :: MarkupI a -> (a, Text.Blaze.Markup)
@@ -207,7 +207,7 @@ instance Monad m => Text.Blaze.Attributable (MarkupT m a) where
   {-# INLINE (!) #-}
 
 instance Monad m => Text.Blaze.Attributable (a -> MarkupT m b) where
-  h ! a = \x -> wrapMarkupT2 (Text.Blaze.! a) $ h x
+  h ! a = wrapMarkupT2 (Text.Blaze.! a) . h
   {-# INLINE (!) #-}
 
 instance Monad m => IsString (MarkupT m ()) where

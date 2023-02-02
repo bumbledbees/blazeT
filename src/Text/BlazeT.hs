@@ -72,7 +72,7 @@ module Text.BlazeT
     ) where
 
 import qualified Text.Blaze
-import           Text.BlazeT.Internal as Text.BlazeT.Internal 
+import           Text.BlazeT.Internal
 
 class ToMarkup a where
   toMarkup :: a -> Markup
